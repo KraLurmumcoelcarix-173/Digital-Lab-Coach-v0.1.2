@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/style.css"/>
     <link rel="stylesheet" href="/static/l3.css"/>
     <link rel="stylesheet" href="/static/tutor.css"/>
+    <script src="/static/i18n.js"></script>
     <script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
     <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
     <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
@@ -451,9 +452,10 @@
 
           <section class="settings-card">
             <h3>Language</h3>
-            <p class="muted">Interface language — more coming later.</p>
-            <select class="select" disabled>
-              <option>English</option>
+            <p class="muted">Interface language. AI answers and Digital's
+              component names stay in English.</p>
+            <select id="lang-select" class="select">
+              <option value="en">English</option>
             </select>
           </section>
 
