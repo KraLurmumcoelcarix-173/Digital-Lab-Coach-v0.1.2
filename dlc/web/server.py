@@ -59,6 +59,7 @@ from dlc.testing.spec import extract_test_specs
 from dlc.sim.simulator import RowReplay, simulate_sequential
 from dlc.telemetry.sink import log_events
 from dlc.web.graph_export import circuit_summary, to_cytoscape
+from dlc.version import __version__
 
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -1231,7 +1232,7 @@ def _telemetry_boot() -> None:
             "install_id": ident["install_id"],
             "issued": ident["issued"],
             "id_source": ident["source"],
-            "version": os.environ.get("DLC_VERSION", "0.1.0"),
+            "version": __version__,
         }])
     except Exception:
         pass

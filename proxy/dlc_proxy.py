@@ -681,7 +681,7 @@ _ADMIN_PAGE = """<!doctype html>
                border-radius:6px;cursor:pointer}
  .range button.on{background:#111827;color:#fff;border-color:#111827}
  .barrow{display:flex;align-items:center;gap:8px;margin:3px 0}
- .barrow .lbl{width:110px;font-size:12px;color:#374151;white-space:nowrap;
+ .barrow .lbl{width:190px;font-size:12px;color:#374151;white-space:nowrap;
               overflow:hidden;text-overflow:ellipsis;text-align:right}
  .barrow .track{flex:1;background:#eef0f3;border-radius:4px;height:14px}
  .barrow .bar{background:#2563eb;height:14px;border-radius:4px;min-width:2px}
@@ -818,6 +818,29 @@ function describe(kind,p){
     case "l3_accept_fix_server":
     case "l3_fix_accepted": return `student ACCEPTED a fix ${f?("on "+f):""}`;
     case "l3_fix_animation_played": return "fix walkthrough animation played";
+    case "l2_walkthrough_played": return `signal-flow walkthrough played on ${f} (${p.waves??"?"} waves)`;
+    case "l3_fix_drillin_opened": return "opened a fix inside a subcircuit";
+    case "l3_hint_level": return `hint level ${esc(p.level??"?")}`;
+    case "l3_adopt_popup_shown": return "asked whether to adopt the proposed test rows";
+    case "l3_adopt_popup_accepted": return "adopted the proposed test rows";
+    case "l3_adopt_popup_declined": return "declined the proposed test rows";
+    case "l3_acceptfail_popup_shown": return "told that the accepted fix still fails rows";
+    case "l3_acceptfail_kept": return "kept the fix despite failing rows";
+    case "l3_acceptfail_discarded": return "discarded the fix after failing rows";
+    case "l3_circuit_re_uploaded": return `re-uploaded ${f} after a fix`;
+    case "l3_netids_toggled":
+    case "netids_toggled": return "toggled net ids on the graph";
+    case "l3_netref_flashed": return "flashed a net reference on the graph";
+    case "tab_switch": return `switched to the ${esc(p.tab||"?")} tab`;
+    case "settings_opened": return "opened settings";
+    case "settings_guide_opened": return "opened the settings guide";
+    case "settings_official_test_deleted": return `official test removed ${f}`;
+    case "build_refused": return `Mode A refused on ${f}: ${esc(p.reason||kv(p)||"gate")}`;
+    case "low_pass_rate":
+    case "too_many_failures":
+    case "scattered_failures":
+    case "missing_clocked_logic":
+    case "unbound_columns": return `Mode A gate: ${esc(kind.replace(/_/g," "))} on ${f}`;
     case "l3_modeA_row_viewed": return "viewed a failing-row analysis";
     case "settings_proxy_saved": return "connected to the course server";
     case "settings_proxy_cleared": return "disconnected from the course server";

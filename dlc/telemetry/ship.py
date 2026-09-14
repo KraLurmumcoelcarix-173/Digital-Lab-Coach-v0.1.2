@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import json
-import os
 import sqlite3
 
 from dlc.telemetry import sink
 from dlc.telemetry.machine import machine_identity
+from dlc.version import __version__
 
 _BATCH = 200
 _STATE = """
@@ -61,7 +61,7 @@ def ship_pending(timeout: float = 6.0) -> dict:
         payload = {"install_id": ident["install_id"],
                    "issued": ident["issued"],
                    "id_source": ident["source"],
-                   "app_version": os.environ.get("DLC_VERSION", "0.1.0"),
+                   "app_version": __version__,
                    "events": events}
         import httpx
         resp = httpx.post(f"{url}/v1/events", json=payload,
