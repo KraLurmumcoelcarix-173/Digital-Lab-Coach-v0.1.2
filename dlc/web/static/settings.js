@@ -75,8 +75,9 @@ function proxyMsg(text, bad) {
   const el = document.getElementById("proxy-msg");
   if (!el) return;
   el.textContent = text;
+  el.dataset.msg = text;
   el.style.color = bad ? "#991b1b" : "#166534";
-  setTimeout(() => { if (el.textContent === text) el.textContent = ""; }, 4000);
+  setTimeout(() => { if (el.dataset.msg === text) { el.textContent = ""; el.dataset.msg = ""; } }, 4000);
 }
 
 async function renderOfficialTests() {
@@ -132,8 +133,9 @@ function otMsg(text, bad) {
   const el = document.getElementById("ot-msg");
   if (!el) return;
   el.textContent = text;
+  el.dataset.msg = text;
   el.style.color = bad ? "#991b1b" : "#166534";
-  setTimeout(() => { if (el.textContent === text) el.textContent = ""; }, 4000);
+  setTimeout(() => { if (el.dataset.msg === text) { el.textContent = ""; el.dataset.msg = ""; } }, 4000);
 }
 
 async function otSave(filename, content) {

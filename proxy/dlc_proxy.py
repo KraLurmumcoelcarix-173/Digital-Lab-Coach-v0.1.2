@@ -834,6 +834,7 @@ function describe(kind,p){
     case "tab_switch": return `switched to the ${esc(p.tab||"?")} tab`;
     case "settings_opened": return "opened settings";
     case "settings_guide_opened": return "opened the settings guide";
+    case "settings_language": return `switched the interface language to ${esc(p.lang||"?")}`;
     case "settings_official_test_deleted": return `official test removed ${f}`;
     case "build_refused": return `Mode A refused on ${f}: ${esc(p.reason||kv(p)||"gate")}`;
     case "low_pass_rate":
