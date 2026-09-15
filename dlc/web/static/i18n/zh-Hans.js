@@ -1,6 +1,6 @@
 I18N.register("zh-Hans", {
   name: "简体中文",
-  css: ".issue-card .issue-fix::before { content: \"修法： \"; }",
+  css: ".issue-card .issue-fix::before { content: \"修法： \"; } .tabs .tab { padding: 8px 8px; white-space: nowrap; } .toolbar .btn, .toolbar .btn-ghost, .toolbar .btn-tests, .toolbar .jar-chip { white-space: nowrap; padding-left: 9px; padding-right: 9px; } .toolbar .select { min-width: 140px; }",
   strings: {
 
     "Dashboard": "状态栏",
