@@ -729,7 +729,7 @@ I18N.register("zh-Hant", {
     "Shifts bits left/right by a chosen amount at once (logical/arithmetic)": "把所有位元一次左移/右移指定的位元數（邏輯/算術）",
     "Electronic logic signal (voltage or current) which oscillates between a high and a low state at a constant frequency": "以固定頻率在高、低兩個準位之間來回振盪的電子邏輯訊號（電壓或電流）",
     "Says whether A is less than, equal to, or greater than B": "判斷 A 小於、等於還是大於 B",
-    "A hard-wired number": "一個固定接死的數",
+    "A hard-wired number": "一個常量數字",
     "Logic-0 reference": "邏輯 0 的基準",
     "Routes one of several inputs out, chosen by a signal.": "由一個訊號選擇，把多個輸入中的一個送出去。",
     "(4049 CMOS)The universal gate — AND then NOT; any logic can be built from these": "（4049 CMOS）萬用閘——先 AND 再 NOT；任何邏輯都能用它搭出來",

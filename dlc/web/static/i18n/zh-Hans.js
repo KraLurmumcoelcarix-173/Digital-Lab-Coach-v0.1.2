@@ -741,7 +741,7 @@ I18N.register("zh-Hans", {
     "Shifts bits left/right by a chosen amount at once (logical/arithmetic)": "把各位一次性左移/右移指定的位数（逻辑/算术）",
     "Electronic logic signal (voltage or current) which oscillates between a high and a low state at a constant frequency": "以固定频率在高低电平之间来回振荡的电子逻辑信号（电压或电流）",
     "Says whether A is less than, equal to, or greater than B": "判断 A 小于、等于还是大于 B",
-    "A hard-wired number": "一个固定接死的数",
+    "A hard-wired number": "一个常量数字",
     "Logic-0 reference": "逻辑 0 的基准",
     "Routes one of several inputs out, chosen by a signal.": "由一个信号选择，把多个输入中的一个送出去。",
     "(4049 CMOS)The universal gate — AND then NOT; any logic can be built from these": "（4049 CMOS）万能门——先 AND 再 NOT；任何逻辑都能用它搭出来",
