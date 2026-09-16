@@ -226,7 +226,6 @@
 
   function restoreAll() {
     for (const n of Array.from(tracked)) {
-      if (!n.isConnected) { tracked.delete(n); continue; }
       if (n.nodeType === 3) {
         if (textOrig.has(n) && n.data === textDone.get(n)) n.data = textOrig.get(n);
         textOrig.delete(n); textDone.delete(n);

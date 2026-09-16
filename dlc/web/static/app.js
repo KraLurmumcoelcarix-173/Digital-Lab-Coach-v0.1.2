@@ -464,6 +464,7 @@ function resetDashboard() {
   if (cy) { cy.destroy(); cy = null; }
   l3ExpireAll("clear");
   l3ResetDom();
+  l2ForgetAll();
   fileSelect.innerHTML = "<option>(no file)</option>";
   fileSelect.disabled = true;
   prevBtn.disabled = true;
@@ -550,6 +551,7 @@ async function postAll() {
   sessionId = data.session_id || null;
   logEvent("upload", { session_id: sessionId, count: loaded.length });
   l3ExpireAll("re-upload");   // hypothesis cards die on re-upload (l3.debug.v1.1 §7)
+  l2ForgetAll();
   if (loaded.length === 0) {
     summaryEl.innerHTML = `<span style="color:#991b1b">No .dig files were processed.</span>`;
     return;
@@ -574,6 +576,8 @@ function renderCurrent() {
   const f = loaded[currentIdx];
   fileSelect.value = String(currentIdx);
   activeIssueIdx = null;
+  l2LibraryFilename = null;
+  l2Show(f.filename);
 
   if (f.error) {
     placeholder.classList.remove("hidden");
@@ -590,12 +594,6 @@ function renderCurrent() {
   renderIssues(f);
   renderTestsForFile(f);
   if (l3PageVisible()) renderL3Tab();   // e.g. file picked from the Test-all panel
-  l2LibraryFilename = null;
-  l2LlmStatus.textContent = "";
-  l2LlmStatus.className = "l2-llm-status";
-  l2LlmOutput.innerHTML = "";
-  l2LlmOutput.classList.add("empty");
-  _resetGrade();
 }
 
 const SCHEMATIC_MIN_SUBCIRCUITS = 3;
@@ -2689,66 +2687,66 @@ l2LlmBtn.addEventListener("click", async () => {
   } catch (err) {
     l2LlmBtn.disabled = false;
     l2EndAbortable();
-    if (err.name === "AbortError") {
-      // Stopped during summarization -> grader was never triggered, so the
-      // grade panel stays untouched; show a red "Stopped" on the summary.
-      l2LlmStatus.textContent = "";
-      l2LlmStatus.className = "l2-llm-status";
-      l2LlmOutput.classList.remove("empty");
-      l2LlmOutput.innerHTML = `<div style="color:#dc2626;font-weight:600;">Stopped.</div>`;
-      return;
-    }
-    l2LlmStatus.textContent = `Network error: ${err}`;
-    l2LlmStatus.className = "l2-llm-status error";
+    l2ForFile(file.filename, () => {
+      if (err.name === "AbortError") {
+        l2LlmStatus.textContent = "";
+        l2LlmStatus.className = "l2-llm-status";
+        l2LlmOutput.classList.remove("empty");
+        l2LlmOutput.innerHTML = `<div style="color:#dc2626;font-weight:600;">Stopped.</div>`;
+        return;
+      }
+      l2LlmStatus.textContent = `Network error: ${err}`;
+      l2LlmStatus.className = "l2-llm-status error";
+    });
     return;
   }
   l2LlmBtn.disabled = false;
 
   if (!res.ok) {
     const t = await res.text();
-    l2LlmStatus.textContent = `Server error ${res.status}: ${t}`;
-    l2LlmStatus.className = "l2-llm-status error";
+    l2ForFile(file.filename, () => {
+      l2LlmStatus.textContent = `Server error ${res.status}: ${t}`;
+      l2LlmStatus.className = "l2-llm-status error";
+    });
     l2EndAbortable();
     return;
   }
   const payload = await res.json();
   logEvent("l2_llm_complete", { filename: file.filename, ok: payload.ok, gated: !!payload.gate_message });
 
-  if (!payload.ok) {
-    l2LlmStatus.textContent = `Error: ${payload.error || "unknown"}`;
-    l2LlmStatus.className = "l2-llm-status error";
-    l2EndAbortable();
-    return;
-  }
+  l2ForFile(file.filename, () => {
+    if (!payload.ok) {
+      l2LlmStatus.textContent = `Error: ${payload.error || "unknown"}`;
+      l2LlmStatus.className = "l2-llm-status error";
+      l2EndAbortable();
+      return;
+    }
 
-  if (payload.gate_message) {
-    l2LlmStatus.textContent = "Precheck blocked the summary.";
-    l2LlmStatus.className = "l2-llm-status gated";
+    if (payload.gate_message) {
+      l2LlmStatus.textContent = "Precheck blocked the summary.";
+      l2LlmStatus.className = "l2-llm-status gated";
+      l2LlmOutput.classList.remove("empty");
+      l2LlmOutput.textContent = payload.gate_message;
+      l2EndAbortable();
+      return;
+    }
+
+    l2LlmStatus.textContent = "Done.";
+    l2LlmStatus.className = "l2-llm-status done";
     l2LlmOutput.classList.remove("empty");
-    l2LlmOutput.textContent = payload.gate_message;
-    l2EndAbortable();
-    return;
-  }
+    l2Extras = {
+      filename: file.filename,
+      exampleRow: payload.example_row || null,
+      roles: payload.subcircuit_roles || [],
+      walk: null, walkPending: !!payload.example_row, walkError: null,
+    };
+    l2LlmOutput.innerHTML = renderL2ParagraphCards(payload.text || "(empty response)", l2Extras);
+    wireL2CardEvents();
+    if (l2Extras.exampleRow) l2FetchWalkthrough(l2Extras);
 
-  l2LlmStatus.textContent = "Done.";
-  l2LlmStatus.className = "l2-llm-status done";
-  l2LlmOutput.classList.remove("empty");
-  l2Extras = {
-    filename: file.filename,
-    exampleRow: payload.example_row || null,
-    roles: payload.subcircuit_roles || [],
-    walk: null, walkPending: !!payload.example_row, walkError: null,
-  };
-  l2LlmOutput.innerHTML = renderL2ParagraphCards(payload.text || "(empty response)", l2Extras);
-  wireL2CardEvents();
-  // The walkthrough is deterministic (no model call): fetch it alongside
-  // the grade so the flow card fills in without waiting for anything.
-  if (l2Extras.exampleRow) l2FetchWalkthrough(file.filename, l2Extras.exampleRow);
-
-  // Grade the summary just shown, keeping the same abort scope so Stop also
-  // cancels grading; if there's nothing to grade, close the scope here.
-  if (payload.text) gradeCurrentSummary(payload.text);
-  else l2EndAbortable();
+    if (payload.text) gradeCurrentSummary(payload.text, file.filename);
+    else l2EndAbortable();
+  });
 });
 
   /*# ───────────────────────────────────────────────────────────────────
@@ -2759,7 +2757,85 @@ let l2Extras = { filename: null, exampleRow: null, roles: [], walk: null,
                  walkPending: false, walkError: null };
 let l2WalkState = null;
 
-async function l2FetchWalkthrough(filename, exampleRow) {
+  /*# ───────────────────────────────────────────────────────────────────
+  *#  L2 panel memory, one entry per file. Previous / Next / the file
+  *#  dropdown park the summary cards, the walkthrough data and the grade
+  *#  of the file being left (the DOM nodes themselves, so expanded cards
+  *#  and hover handlers survive) and bring back what the newly selected
+  *#  file had. Only Clear all and a re-upload forget them.
+  *# ──────────────────────────────────────────────────────────────────#*/
+let l2Store = {};
+let l2ShownFilename = null;
+
+function _l2Detach(el) {
+  const frag = document.createDocumentFragment();
+  while (el && el.firstChild) frag.appendChild(el.firstChild);
+  return frag;
+}
+
+function l2Park() {
+  if (l2ShownFilename == null) return;
+  l2Store[l2ShownFilename] = {
+    status: _l2Detach(l2LlmStatus),
+    statusCls: l2LlmStatus.className,
+    out: _l2Detach(l2LlmOutput),
+    outEmpty: l2LlmOutput.classList.contains("empty"),
+    grade: _l2Detach(gradeBody),
+    extras: l2Extras,
+    gradedSummary: lastGradedSummary,
+    goal: goalTextarea.value,
+  };
+  l2ShownFilename = null;
+}
+
+function l2Show(filename) {
+  if (l2ShownFilename === filename) return;
+  l2Park();
+  l2ShownFilename = filename;
+  const s = filename != null ? l2Store[filename] : null;
+  if (filename != null) delete l2Store[filename];
+  if (!s) {
+    l2LlmStatus.textContent = "";
+    l2LlmStatus.className = "l2-llm-status";
+    l2LlmOutput.innerHTML = "";
+    l2LlmOutput.classList.add("empty");
+    l2Extras = { filename: null, exampleRow: null, roles: [], walk: null,
+                 walkPending: false, walkError: null };
+    _resetGrade();
+    return;
+  }
+  l2LlmStatus.textContent = "";
+  l2LlmStatus.appendChild(s.status);
+  l2LlmStatus.className = s.statusCls;
+  l2LlmOutput.innerHTML = "";
+  l2LlmOutput.appendChild(s.out);
+  l2LlmOutput.classList.toggle("empty", s.outEmpty);
+  if (gradeBody) { gradeBody.innerHTML = ""; gradeBody.appendChild(s.grade); }
+  l2Extras = s.extras;
+  lastGradedSummary = s.gradedSummary;
+  goalTextarea.value = s.goal;
+  goalTextarea.dispatchEvent(new Event("input"));
+  if (l2Extras.walkDirty) {
+    l2Extras.walkDirty = false;
+    l2RefreshFlowCard();
+  }
+}
+
+function l2ForgetAll() {
+  l2Store = {};
+  l2ShownFilename = null;
+}
+
+function l2ForFile(filename, fn) {
+  if (l2ShownFilename === filename) { fn(); return; }
+  const back = l2ShownFilename;
+  l2Show(filename);
+  fn();
+  l2Show(back);
+}
+
+async function l2FetchWalkthrough(ex) {
+  const filename = ex.filename, exampleRow = ex.exampleRow;
   let body = null;
   try {
     const res = await fetch("/api/l2/walkthrough", {
@@ -2774,11 +2850,11 @@ async function l2FetchWalkthrough(filename, exampleRow) {
   } catch (err) {
     body = { ok: false, warning: `Network error: ${err}` };
   }
-  if (l2Extras.filename !== filename) return;      // a newer summary replaced this one
-  l2Extras.walkPending = false;
-  if (body && body.ok) l2Extras.walk = body;
-  else l2Extras.walkError = (body && body.warning) || "walkthrough unavailable";
-  l2RefreshFlowCard();
+  ex.walkPending = false;
+  if (body && body.ok) ex.walk = body;
+  else ex.walkError = (body && body.warning) || "walkthrough unavailable";
+  if (ex === l2Extras) l2RefreshFlowCard();
+  else ex.walkDirty = true;
 }
 
 function l2RefreshFlowCard() {
@@ -3216,9 +3292,13 @@ function _resetGrade() {
   }
 }
 
-async function gradeCurrentSummary(summaryText) {
+async function gradeCurrentSummary(summaryText, filename) {
   if (!gradeBody || !sessionId || loaded.length === 0) return;
-  const file = loaded[currentIdx];
+  // Called from the summarize flow with that file's name (the user may
+  // have moved on meanwhile); the grader dropdown re-grades the shown file.
+  const file = filename != null
+    ? loaded.find((x) => x.filename === filename)
+    : loaded[currentIdx];
   if (!file || file.error) return;
   lastGradedSummary = summaryText;
   const graderModel = graderSelect ? graderSelect.value || null : null;
@@ -3246,34 +3326,36 @@ async function gradeCurrentSummary(summaryText) {
     });
   } catch (err) {
     l2EndAbortable();
-    if (err.name === "AbortError") {
-      gradeBody.innerHTML = `<span style="color:#dc2626;font-weight:600;">Grading stopped.</span>`;
-      return;
-    }
-    gradeBody.innerHTML = `<span style="color:#b91c1c">Grade request failed: ${escapeHtml(String(err))}</span>`;
+    l2ForFile(file.filename, () => {
+      if (err.name === "AbortError") {
+        gradeBody.innerHTML = `<span style="color:#dc2626;font-weight:600;">Grading stopped.</span>`;
+        return;
+      }
+      gradeBody.innerHTML = `<span style="color:#b91c1c">Grade request failed: ${escapeHtml(String(err))}</span>`;
+    });
     return;
   }
   let g;
   try { g = await res.json(); } catch { g = null; }
-  if (!g || !g.ok) {
-    gradeBody.innerHTML = `<span style="color:#b91c1c">${escapeHtml((g && g.error) || ("Grader error " + res.status))}</span>`;
+  l2ForFile(file.filename, () => {
+    if (!g || !g.ok) {
+      gradeBody.innerHTML = `<span style="color:#b91c1c">${escapeHtml((g && g.error) || ("Grader error " + res.status))}</span>`;
+      l2EndAbortable();
+      return;
+    }
+    renderGradeDonut(g);
     l2EndAbortable();
-    return;
-  }
-  renderGradeDonut(g);
-  l2EndAbortable();
 
-  // One summary -> one grade. A low score only SUGGESTS a re-run; the
-  // user decides (the old auto-retry silently re-clicked Summarize).
-  if (typeof g.total === "number" && g.total < GRADE_HINT_THRESHOLD) {
-    const host = gradeBody.querySelector(".grade-info") || gradeBody;
-    const n = document.createElement("div");
-    n.className = "grade-note";
-    n.textContent =
-      `Score ${g.total} is below ${GRADE_HINT_THRESHOLD} - click ` +
-      `"Summarize circuit" again if you want a fresh attempt.`;
-    host.appendChild(n);
-  }
+    if (typeof g.total === "number" && g.total < GRADE_HINT_THRESHOLD) {
+      const host = gradeBody.querySelector(".grade-info") || gradeBody;
+      const n = document.createElement("div");
+      n.className = "grade-note";
+      n.textContent =
+        `Score ${g.total} is below ${GRADE_HINT_THRESHOLD} - click ` +
+        `"Summarize circuit" again if you want a fresh attempt.`;
+      host.appendChild(n);
+    }
+  });
 }
 
 function renderGradeDonut(g) {
