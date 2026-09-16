@@ -38,6 +38,7 @@ v0.1.0 (2026/8/23) — first packaged release.
   - [Rotating the course token](#rotating-the-course-token)
   - [Where to change what](#where-to-change-what)
 - [File layout](#file-layout)
+- [Design](#design)
 - [Developer setup](#developer-setup)
 - [Troubleshooting (Windows): Smart App Control](#troubleshooting-windows-uv-run-blocked-by-smart-app-control)
 - [Digital.jar for per-row test verification](#developer-optional-setup-digitaljar-for-per-row-test-verification)
@@ -266,6 +267,12 @@ Restart the server (or the proxy) after changing any of these.
 | `START_HERE.bat` / `start.sh` | One-click student launchers
 | `UNINSTALL.bat` / `uninstall.sh` | Removes DLC and the local `~/.dlc` data folder.
 | `scripts/` | Maintainer utilities - `make_release_zip.py` builds the student release zip.
+
+## Design
+
+Mode A design flow: 
+
+![ModeA deign flow](docs/screenshots/modeA_design_flow.png)
 
 ## Developer setup
 
