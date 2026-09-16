@@ -109,6 +109,43 @@
     },
   ];
 
+  function tsCard(i, key, name, hint, body) {
+    return '<div class="l2-card l2-card-' + key +
+      (body ? " expanded" : "") + '" data-card-idx="' + i + '">' +
+      '<div class="l2-card-head" role="button" tabindex="0">' +
+      '<span class="l2-card-num">' + (i + 1) + "</span>" +
+      '<span class="l2-card-name">' + name + "</span>" +
+      '<span class="l2-card-hint">' + hint + "</span>" +
+      '<span class="l2-card-toggle">+</span></div>' +
+      '<div class="l2-card-body">' + body + "</div></div>";
+  }
+
+  const TS_FLOW_CARD =
+    '<div id="tutor-sample-flowcard" class="l2-card l2-card-flow expanded" ' +
+    'data-card-idx="2">' +
+    '<div class="l2-card-head" role="button" tabindex="0">' +
+    '<span class="l2-card-num">3</span>' +
+    '<span class="l2-card-name">Signal flow example</span>' +
+    '<span class="l2-card-hint">One row traced end to end.</span>' +
+    '<span class="l2-card-play" title="open to play the walkthrough">' +
+    "&#9654;</span>" +
+    '<span class="l2-card-toggle">+</span></div>' +
+    '<div class="l2-card-body">' +
+    '<div class="l2-flow-prose">Row 0 puts address 0 on the program ' +
+    "counter: the ROM labeled Instruction Memory returns the instruction " +
+    "word, the Splitter peels rs1 and rs2 out of it, the register file " +
+    "drives ReadData1 = 5 and ReadData2 = 3, and the Multiplexer keeps " +
+    "sel = 0 so the register operand is the one that reaches the adder." +
+    "</div>" +
+    '<div class="l2-rich">' +
+    '<div class="l2-walk-hint">Row 0 of the tests: ' +
+    "<code>0 1 5 3</code></div>" +
+    '<div class="l2-walk-row">' +
+    '<button type="button" class="l2-walk-btn">&#9654; Play the ' +
+    "walkthrough on the circuit</button>" +
+    '<span class="l2-walk-hint">12 components in 4 waves </span>' +
+    "</div></div></div></div>";
+
   const SAMPLE_L2_PAGE =
     '<div class="tutor-sample-badge">SAMPLE</div>' +
     '<div class="ts-l2-layout">' +
@@ -146,37 +183,20 @@
     '<div class="ts-l2-side">' +
     '<div id="tutor-sample-summary" class="ts-block">' +
     '<h2>Big-picture coach <span class="ts-pill">LLM</span></h2>' +
-    '<div class="ts-acc ts-acc-blue">' +
-    '<div class="ts-acc-head"><span class="ts-acc-num">1</span>' +
-    "<b>Overall purpose</b> <span class='ts-muted'><i>What this circuit does.</i></span></div>" +
-    '<div class="ts-acc-body">Your circuit implements a single-cycle ' +
-    "RISC-V processor that produces ReadData1 and ReadData2 as its " +
-    "32-bit top-level outputs. The main components driving this " +
-    "behavior are the ROM labeled Instruction Memory, a Register " +
-    "acting as the program counter, and a Multiplexer that selects " +
-    "between a register operand and a sign-extended immediate.</div>" +
-    "</div>" +
-    '<div class="ts-acc ts-acc-purple">' +
-    '<div class="ts-acc-head"><span class="ts-acc-num">2</span>' +
-    "<b>Subcircuits</b> <span class='ts-muted'><i>Role of each child " +
-    ".dig.</i></span><span class='ts-acc-plus'>+</span></div>" +
-    "</div>" +
-    '<div class="ts-acc ts-acc-green">' +
-    '<div class="ts-acc-head"><span class="ts-acc-num">3</span>' +
-    "<b>Signal flow</b> <span class='ts-muted'><i>Input → output " +
-    "paths.</i></span><span class='ts-acc-plus'>+</span></div>" +
-    "</div>" +
-    '<div class="ts-acc ts-acc-amber">' +
-    '<div class="ts-acc-head"><span class="ts-acc-num">4</span>' +
-    "<b>Topology</b> <span class='ts-muted'><i>Fan-in / fan-out and " +
-    "layout hot spots.</i></span><span class='ts-acc-plus'>+</span></div>" +
-    "</div>" +
-    '<div class="ts-acc ts-acc-pink">' +
-    '<div class="ts-acc-head"><span class="ts-acc-num">5</span>' +
-    "<b>Course concepts</b> <span class='ts-muted'><i>Lecture-tag " +
-    "mapping.</i></span><span class='ts-acc-plus'>+</span></div>" +
-    "</div>" +
-    "</div></div></div>";
+    '<div class="l2-card-grid">' +
+    tsCard(0, "purpose", "Overall purpose", "What this circuit does.",
+      "Your circuit implements a single-cycle " +
+      "RISC-V processor that produces ReadData1 and ReadData2 as its " +
+      "32-bit top-level outputs. The main components driving this " +
+      "behavior are the ROM labeled Instruction Memory, a Register " +
+      "acting as the program counter, and a Multiplexer that selects " +
+      "between a register operand and a sign-extended immediate.") +
+    tsCard(1, "subs", "Subcircuits", "Role of each child .dig.", "") +
+    TS_FLOW_CARD +
+    tsCard(3, "goal", "Goal comparison", "Versus what you asked for.", "") +
+    tsCard(4, "topo", "Topology", "Architectural pattern.", "") +
+    tsCard(5, "lect", "Course concepts", "Most relevant lectures.", "") +
+    "</div></div></div></div>";
 
   const SAMPLE_L3_PAGE =
     '<div class="tutor-sample-badge">SAMPLE</div>' +
@@ -243,6 +263,11 @@
           html: "The summary is then <b>graded for believability</b> " +
             "against your circuit's real facts. ",
           target: "#tutor-sample-grade" },
+        { title: "The signal-flow card",
+          html: "Card 3 traces <b>one real test row</b> through your " +
+            "circuit, and <b>Play</b> lights that path up on the Dashboard " +
+            "graph one wave at a time.",
+          target: "#tutor-sample-flowcard" },
       ],
     },
     sampleL3: {
