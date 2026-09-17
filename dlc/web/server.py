@@ -319,6 +319,14 @@ async def circuit(files: list[UploadFile] = File(...)) -> dict:
             except Exception:
                 pass
             try:
+                from dlc.analyzer.official_test_match import (
+                    check_official_test_match)
+                issues_payload.extend(
+                    i.to_dict()
+                    for i in check_official_test_match(c, name))
+            except Exception:
+                pass
+            try:
                 from dlc.l3.official_store import get_runtime_payload
                 if get_runtime_payload(name, "rom"):
                     for iss in issues_payload:
