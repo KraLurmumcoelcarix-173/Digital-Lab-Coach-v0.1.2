@@ -1026,9 +1026,6 @@ function renderDrillGraph(data) {
     layout: graphLayoutFor(data.graph.nodes),
     wheelSensitivity: 0.2,
     minZoom: 0.1, maxZoom: 3,
-    // View-only: no dragging, no selection — the only controls are the deeper
-    // drill (on a nested subcircuit) and Go back.
-    autoungrabify: true,
     boxSelectionEnabled: false,
     autounselectify: true,
   });
