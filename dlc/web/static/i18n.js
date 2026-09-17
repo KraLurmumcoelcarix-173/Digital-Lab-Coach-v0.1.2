@@ -298,6 +298,7 @@
   }
 
   function activate(code) {
+    restoreAll();
     lang = code;
     active = code === "en" ? null : (packs[code] || null);
     applyAll();
@@ -309,12 +310,17 @@
     } catch (e) {}
   }
 
+  let wanted = null;
+
   function set(code) {
     if (!LANGS.some((l) => l[0] === code)) code = "en";
     try { localStorage.setItem(STORE_KEY, code); } catch (e) {}
-    restoreAll();
+    wanted = code;
     if (code === "en" || packs[code]) { activate(code); return; }
-    loadPack(code, (ok) => activate(ok ? code : "en"));
+    restoreAll();
+    active = null;
+    applyCss();
+    loadPack(code, (ok) => { if (wanted === code) activate(ok ? code : "en"); });
   }
 
   function register(code, pack) {
