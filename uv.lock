@@ -159,7 +159,7 @@ wheels = [
 
 [[package]]
 name = "digital-lab-coach"
-version = "0.1.2"
+version = "0.1.2.1"
 source = { virtual = "." }
 dependencies = [
     { name = "anthropic" },
