@@ -203,6 +203,8 @@ I18N.register("ko", {
     "An official test is registered for this file, but the file carries no rows. Test runs use the official test, so the result you see still matches your grade.": "이 파일에는 공식 테스트가 등록되어 있지만, 파일에 행이 없어요. 실행할 때는 공식 테스트를 쓰기 때문에, 보이는 결과는 내 성적과 그대로 일치해요.",
     "Open Settings → Official tests to see the rows that count.": "설정 → 공식 테스트를 열면 실제로 채점에 반영되는 행을 볼 수 있어요.",
     "Open Settings → Official tests to see the rows that will run.": "설정 → 공식 테스트를 열면 실행될 행을 볼 수 있어요.",
+    "Not supported yet: {names}": "아직 지원하지 않는 부품: {names}",
+    "DLC does not model this Digital component yet, so it cannot trace any wire through it. This is a gap in DLC, not a mistake in your circuit. The graph draws it as a plain box with no connections, and other findings on this file may be wrong for the same reason. Layer 2 and Layer 3 are unavailable here; your circuit itself may be fine.": "DLC가 이 Digital 부품을 아직 모델링하지 않아서, 그 부품을 지나는 배선을 하나도 따라갈 수 없어요. 이건 DLC의 부족한 점이지 회로가 잘못된 게 아니에요. 그래프에는 배선이 하나도 붙지 않은 밋밋한 상자로 그려지고, 같은 이유로 이 파일에서 찾아낸 다른 문제들도 틀렸을 수 있어요. 여기서는 Layer 2와 Layer 3을 쓸 수 없어요. 회로 자체는 멀쩡할 수도 있어요.",
     "Width mismatch between drivers: {a} vs {b}": "드라이버 사이 비트 폭 불일치: {a} vs {b}",
     "Two drivers on the same net have different bit widths: {a} is {x}-bit, {b} is {y}-bit. Only one driver should feed a net.": "같은 넷에 있는 두 드라이버의 비트 폭이 달라요: {a} 쪽은 {x}비트, {b} 쪽은 {y}비트예요. 넷 하나를 구동하는 드라이버는 하나여야 해요.",
     "Disconnect one driver, or insert a BitExtender / Splitter to match widths before they meet.": "드라이버 하나를 끊거나, 만나기 전에 BitExtender / Splitter를 넣어 비트 폭을 맞추세요.",

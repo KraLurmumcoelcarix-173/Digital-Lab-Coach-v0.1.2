@@ -207,6 +207,8 @@ I18N.register("zh-Hans", {
     "An official test is registered for this file, but the file carries no rows. Test runs use the official test, so the result you see still matches your grade.": "这个文件已登记官方测试，但文件里没有行。运行时用官方测试，所以你看到的结果和你的成绩仍然一致。",
     "Open Settings → Official tests to see the rows that count.": "打开设置 → 官方测试，就能看到真正算数的行。",
     "Open Settings → Official tests to see the rows that will run.": "打开设置 → 官方测试，就能看到会跑哪些行。",
+    "Not supported yet: {names}": "暂不支持的元件：{names}",
+    "DLC does not model this Digital component yet, so it cannot trace any wire through it. This is a gap in DLC, not a mistake in your circuit. The graph draws it as a plain box with no connections, and other findings on this file may be wrong for the same reason. Layer 2 and Layer 3 are unavailable here; your circuit itself may be fine.": "DLC 还没有为这个 Digital 元件建模，所以追踪不了任何穿过它的导线。这是 DLC 的不足，不是你的电路有问题。图上它会画成一个没有任何导线相连的空白方框；出于同样的原因，这个文件上其他发现的问题也可能是错的。这里用不了 Layer 2 和 Layer 3；你的电路本身可能完全没问题。",
     "Width mismatch between drivers: {a} vs {b}": "驱动源之间位宽不匹配：{a} 和 {b}",
     "Two drivers on the same net have different bit widths: {a} is {x}-bit, {b} is {y}-bit. Only one driver should feed a net.": "同一个网络上的两个驱动源位宽不同：{a} 是 {x} 位，{b} 是 {y} 位。一个网络只应该有一个驱动源。",
     "Disconnect one driver, or insert a BitExtender / Splitter to match widths before they meet.": "断开一个驱动源，或者在它们相遇前插一个 BitExtender / Splitter 把位宽对齐。",

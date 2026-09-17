@@ -509,6 +509,14 @@ main {
   background: #f0fdfa;
 }
 .issue-card.kind-official_test_mismatch:hover { background: #ccfbf1; }
+/* fuchsia: a Digital element DLC has no pin geometry for. Coloured like the
+   other tool-side cards on purpose — it is an error, but ours, not the
+   student's. It stops L2/L3 because the signal graph has a hole in it */
+.issue-card.kind-unsupported_element {
+  border-left-color: #a21caf;
+  background: #fdf4ff;
+}
+.issue-card.kind-unsupported_element:hover { background: #fae8ff; }
 
 .issue-card .sev-badge {
   display: inline-block;
@@ -525,6 +533,7 @@ main {
 .issue-card.sev-info    .sev-badge { background: #dbeafe; color: #1e40af; }
 .issue-card.kind-test_io_coverage .sev-badge { background: #ede9fe; color: #5b21b6; }
 .issue-card.kind-official_test_mismatch .sev-badge { background: #ccfbf1; color: #115e59; }
+.issue-card.kind-unsupported_element .sev-badge { background: #fae8ff; color: #86198f; }
 
 .issue-card .issue-title { font-weight: 600; }
 .issue-card .issue-msg   { color: #374151; margin-top: 3px; }

@@ -203,6 +203,8 @@ I18N.register("ja", {
     "An official test is registered for this file, but the file carries no rows. Test runs use the official test, so the result you see still matches your grade.": "このファイルには公式テストが登録されていますが、ファイルに行がありません。実行時は公式テストを使うため、表示される結果はあなたの成績と一致します。",
     "Open Settings → Official tests to see the rows that count.": "「設定 → 公式テスト」を開くと、採点の対象になる行を確認できます。",
     "Open Settings → Official tests to see the rows that will run.": "「設定 → 公式テスト」を開くと、実行される行を確認できます。",
+    "Not supported yet: {names}": "まだ対応していない部品：{names}",
+    "DLC does not model this Digital component yet, so it cannot trace any wire through it. This is a gap in DLC, not a mistake in your circuit. The graph draws it as a plain box with no connections, and other findings on this file may be wrong for the same reason. Layer 2 and Layer 3 are unavailable here; your circuit itself may be fine.": "DLC はこの Digital 部品をまだモデル化していないため、そこを通る配線をたどることができません。これは DLC 側の不足であって、あなたの回路の間違いではありません。グラフでは配線が 1 本もつながっていない素の枠として描かれ、同じ理由でこのファイルの他の検出結果も誤っている可能性があります。ここでは Layer 2 と Layer 3 は利用できません。回路自体は問題ないかもしれません。",
     "Width mismatch between drivers: {a} vs {b}": "ドライバ間のビット幅の不一致：{a} と {b}",
     "Two drivers on the same net have different bit widths: {a} is {x}-bit, {b} is {y}-bit. Only one driver should feed a net.": "同じネット上の 2 つのドライバのビット幅が異なります：{a} は {x} ビット、{b} は {y} ビットです。1 つのネットを駆動するドライバは 1 つだけにしてください。",
     "Disconnect one driver, or insert a BitExtender / Splitter to match widths before they meet.": "ドライバの一方を切り離すか、合流する前に BitExtender / Splitter を入れてビット幅をそろえてください。",
