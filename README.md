@@ -156,11 +156,21 @@ export DLC_PROXY_DB=/path/to/dlc_proxy.db
 uv run uvicorn proxy.dlc_proxy:app --host 0.0.0.0 --port 8321
 ```
 
+On Windows, `export` is not a command: use `set NAME=value` in Command
+Prompt or `$env:NAME = "value"` in PowerShell, in the same window you start
+the proxy from. Then confirm `curl http://localhost:8321/v1/health` reports
+`"course_token_set":true` — a course token that never reached the process
+leaves the proxy open to anyone who finds the URL, which from the student
+side is indistinguishable from working. Students point at
+`http://<the proxy machine's LAN IP>:8321`; `localhost` only works on the
+proxy machine itself.
+
 Three spend-protection layers are on by default: per-student daily caps
 (Mode A 1/day, Mode B 2/day), per-machine wipe-proof backstops, and a
 whole-server daily circuit breaker (`DLC_GLOBAL_DAILY_CALLS`, default
 600 calls; `DLC_GLOBAL_DAILY_USD`, default $20). Deployment options 
-(own machine vs VPS with HTTPS) are in the release guide.
+(own machine vs VPS with HTTPS), and how to find that LAN address on each
+OS, are in the release guide.
 
 ### Changing the limits
 

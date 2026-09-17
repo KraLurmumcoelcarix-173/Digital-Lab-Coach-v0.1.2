@@ -27,13 +27,21 @@ export DLC_PROXY_DB=/path/to/dlc_proxy.db   # default: ./dlc_proxy.db
 uv run uvicorn proxy.dlc_proxy:app --host 0.0.0.0 --port 8321
 ```
 
-Windows PowerShell: use `$env:ANTHROPIC_API_KEY = "..."` etc.
+On Windows there is no `export`: PowerShell uses `$env:ANTHROPIC_API_KEY =
+"..."`, Command Prompt uses `set ANTHROPIC_API_KEY=...` (no quotes, no
+spaces around `=`). Set them and start the proxy in the same window.
 
-Check it's alive: open `http://<host>:8321/v1/health` 
+Check it's alive, from the proxy machine: `curl http://localhost:8321/v1/health`.
+`"course_token_set"` must read `true` — when it is false the proxy has no
+course token and therefore accepts *everyone*, which looks exactly like
+working normally from the student side.
 
-Give students: `http://<host>:8321` as the course server URL, plus the
-DLC_COURSE_TOKEN value. They paste both in the tool's settings (stored
-in their `~/.dlc/config.json` as `proxy_url` / `proxy_token`).
+Give students `http://<the proxy machine's LAN IP>:8321` as the course
+server URL, plus the DLC_COURSE_TOKEN value. They paste both in the tool's
+settings (stored in their `~/.dlc/config.json` as `proxy_url` /
+`proxy_token`). `localhost` only ever works on the proxy machine itself —
+[the instructor guide](../docs/RELEASE_GUIDE.md) shows how to find the LAN
+address on each OS.
 
 ## Endpoints
 
