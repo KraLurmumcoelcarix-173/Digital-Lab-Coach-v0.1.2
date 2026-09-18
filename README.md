@@ -282,7 +282,7 @@ Restart the server (or the proxy) after changing any of these.
 
 Mode A design flow: 
 
-![ModeA deign flow](docs/screenshots/modeA_design_flow.png)
+[![Digital Lab Coach pipeline](docs/screenshots/mode-A-design.png)](docs/screenshots/mode-A-design.png)
 
 ## Developer setup
 
